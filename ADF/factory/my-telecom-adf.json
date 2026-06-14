@@ -1,0 +1,15 @@
+{
+	"name": "my-telecom-adf",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "543bbff7-548c-4b6a-86c7-37212ffc18f7",
+		"tenantId": "bc2d9541-197e-4ba1-9bb6-791a1fa94d8b"
+	}
+}

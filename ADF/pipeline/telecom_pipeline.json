@@ -1,0 +1,280 @@
+{
+	"name": "telecom_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_git_sql_api_iteration",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.git_sql_api_files_metadata",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Switch1",
+							"type": "Switch",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"on": {
+									"value": "@item().source_type",
+									"type": "Expression"
+								},
+								"cases": [
+									{
+										"value": "git_csv",
+										"activities": [
+											{
+												"name": "Copy data from github_copy1",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "DelimitedTextSource",
+														"storeSettings": {
+															"type": "HttpReadSettings",
+															"requestMethod": "GET"
+														},
+														"formatSettings": {
+															"type": "DelimitedTextReadSettings"
+														}
+													},
+													"sink": {
+														"type": "DelimitedTextSink",
+														"storeSettings": {
+															"type": "AzureBlobFSWriteSettings",
+															"copyBehavior": "PreserveHierarchy"
+														},
+														"formatSettings": {
+															"type": "DelimitedTextWriteSettings",
+															"quoteAllText": true,
+															"fileExtension": ".txt"
+														}
+													},
+													"enableStaging": false,
+													"translator": {
+														"type": "TabularTranslator",
+														"typeConversion": true,
+														"typeConversionSettings": {
+															"allowDataTruncation": true,
+															"treatBooleanAsNumber": false
+														}
+													}
+												},
+												"inputs": [
+													{
+														"referenceName": "github_source_data",
+														"type": "DatasetReference",
+														"parameters": {
+															"source_file_name": {
+																"value": "@item().source_file_name",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "github_sink_data",
+														"type": "DatasetReference",
+														"parameters": {
+															"folder_name": {
+																"value": "@item().folder_name",
+																"type": "Expression"
+															},
+															"file_name": {
+																"value": "@item().file_name",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											}
+										]
+									},
+									{
+										"value": "sql_DB",
+										"activities": [
+											{
+												"name": "Copy data from sql DB",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "AzureSqlSource",
+														"queryTimeout": "02:00:00",
+														"partitionOption": "None"
+													},
+													"sink": {
+														"type": "ParquetSink",
+														"storeSettings": {
+															"type": "AzureBlobFSWriteSettings"
+														},
+														"formatSettings": {
+															"type": "ParquetWriteSettings"
+														}
+													},
+													"enableStaging": false,
+													"translator": {
+														"type": "TabularTranslator",
+														"typeConversion": true,
+														"typeConversionSettings": {
+															"allowDataTruncation": true,
+															"treatBooleanAsNumber": false
+														}
+													}
+												},
+												"inputs": [
+													{
+														"referenceName": "sql_source_data",
+														"type": "DatasetReference",
+														"parameters": {
+															"source_table_name": {
+																"value": "@item().source_table_name",
+																"type": "Expression"
+															},
+															"schema": {
+																"value": "@item().schema",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "sql_sink_data",
+														"type": "DatasetReference",
+														"parameters": {
+															"folder_name": {
+																"value": "@item().folder_name\n",
+																"type": "Expression"
+															},
+															"sink_table_name": {
+																"value": "@item().sink_table_name",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											}
+										]
+									},
+									{
+										"value": "telecom_api",
+										"activities": [
+											{
+												"name": "Copy data from api",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "JsonSource",
+														"storeSettings": {
+															"type": "HttpReadSettings",
+															"requestMethod": "GET"
+														},
+														"formatSettings": {
+															"type": "JsonReadSettings"
+														}
+													},
+													"sink": {
+														"type": "JsonSink",
+														"storeSettings": {
+															"type": "AzureBlobFSWriteSettings"
+														},
+														"formatSettings": {
+															"type": "JsonWriteSettings"
+														}
+													},
+													"enableStaging": false
+												},
+												"inputs": [
+													{
+														"referenceName": "api_source_data",
+														"type": "DatasetReference"
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "api_sink_data",
+														"type": "DatasetReference",
+														"parameters": {
+															"file_name": {
+																"value": "@item().file_name",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"git_sql_api_files_metadata": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source_type": "git_csv",
+						"source_file_name": "server_performance_logs_1200.csv",
+						"folder_name": "server_performance_logs",
+						"file_name": "server_performance_logs.csv"
+					},
+					{
+						"source_type": "git_csv",
+						"source_file_name": "device_host_mapping.csv",
+						"folder_name": "device_host_mapping",
+						"file_name": "device_host_mapping.csv"
+					},
+					{
+						"source_type": "sql_DB",
+						"folder_name": "Asset_Config",
+						"sink_table_name": "asset_config.parquet",
+						"schema": "dbo",
+						"source_table_name": "asset_config"
+					},
+					{
+						"source_type": "telecom_api",
+						"file_name": "telecom_api_data"
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-06-14T12:00:33Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

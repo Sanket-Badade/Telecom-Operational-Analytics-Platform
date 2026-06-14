@@ -1,0 +1,13 @@
+{
+	"name": "to_Github",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://raw.githubusercontent.com/Sanket-Badade/Telecom-Operational-Analytics-Platform/refs/heads/main/",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}

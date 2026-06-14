@@ -1,0 +1,31 @@
+{
+	"name": "github_source_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "to_Github",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"source_file_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@concat('Source_SPL_csv/',dataset().source_file_name)",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

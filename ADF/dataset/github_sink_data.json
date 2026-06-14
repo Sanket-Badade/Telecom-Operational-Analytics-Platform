@@ -1,0 +1,48 @@
+{
+	"name": "github_sink_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "landing_zone",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"folder_name": {
+				"type": "string"
+			},
+			"file_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().file_name",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat('Github_data/', dataset().folder_name)",
+					"type": "Expression"
+				},
+				"fileSystem": "landing"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "device_id",
+				"type": "String"
+			},
+			{
+				"name": "host_id",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

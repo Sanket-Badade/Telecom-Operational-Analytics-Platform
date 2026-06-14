@@ -1,0 +1,19 @@
+{
+	"name": "api_source_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "telecom_api",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "dev_101"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

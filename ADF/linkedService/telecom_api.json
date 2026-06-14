@@ -1,0 +1,13 @@
+{
+	"name": "telecom_api",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://telemetry-api-generation-dzdhafcxceewckgs.canadacentral-01.azurewebsites.net/api/api/v1/metrics/",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
