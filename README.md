@@ -1,11 +1,9 @@
 # Telecom-Operational-Analytics-Platform
 
-##(currently working on this project)
-
 ## RAW ARCHITECTURE
 
                             ┌────────────────────────────────────────────────────────┐
-                            │                   1. DATA SOURCES                      │        ------------>> completed
+                            │                   1. DATA SOURCES                      │       
                             │  • Streaming JSON  • Nested API  • SQL DB  • 2x CSVs   │
                             └───────────────────────────┬────────────────────────────┘
                                                         │
@@ -13,7 +11,7 @@
                                                         │
                                                         ▼
                             ┌────────────────────────────────────────────────────────┐
-                            │                   2. LANDING ZONE                      │      -------------->> completed
+                            │                   2. LANDING ZONE                      │      
                             │             (Immutable Raw Blob Storage)               │
                             └───────────────────────────┬────────────────────────────┘
                                                         │
@@ -23,7 +21,7 @@
                                                         │
                                                         ▼
                             ┌────────────────────────────────────────────────────────┐
-                            │                   3. BRONZE LAYER                      │    --------------->> completed
+                            │                   3. BRONZE LAYER                      │    
                             │               (Raw Delta Lake Tables)                  │
                             └───────────────────────────┬────────────────────────────┘
                                                         │
